@@ -104,7 +104,8 @@ class TableLatencyPredictor(LatencyPredictor):
         _logger.info("pip install paddleslim-opt-tools")
         out = shutil.which('paddle_lite_opt')
         if out is None:
-            pip.main(['install', 'paddleslim-opt-tools'])
+            from pip._internal import main
+            main(['install', 'paddleslim-opt-tools'])
 
     def _initial_table(self):
         if self.table_file in TableLatencyPredictor.hardware_list:
@@ -198,9 +199,9 @@ class TableLatencyPredictor(LatencyPredictor):
 
         paddle.enable_static()
         with open(pbmodel_file, "rb") as f:
-            fluid_program = paddle.static.Program.parse_from_string(f.read())
+            _program = paddle.static.Program.parse_from_string(f.read())
 
-        graph = GraphWrapper(fluid_program)
+        graph = GraphWrapper(_program)
 
         if input_shape != None:
             ori_shape = self._get_input_shape(graph)
